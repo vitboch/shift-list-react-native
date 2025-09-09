@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ShiftListApp - Демо</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+          sans-serif;
+        background-color: #f2f2f7;
+        color: #333;
+      }
+
+      .container {
+        max-width: 400px;
+        margin: 0 auto;
+        background: white;
+        min-height: 100vh;
+      }
+
+      .header {
+        background: #007aff;
+        color: white;
+        padding: 20px;
+        text-align: center;
+      }
+
+      .shift-card {
+        background: white;
+        margin: 16px;
+        padding: 16px;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      .company-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 12px;
+      }
+
+      .logo {
+        width: 48px;
+        height: 48px;
+        border-radius: 24px;
+        background: #e5e5e7;
+        margin-right: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+      }
+
+      .company-info {
+        flex: 1;
+      }
+
+      .company-name {
+        font-size: 16px;
+        font-weight: 600;
+        margin-bottom: 4px;
+      }
+
+      .rating {
+        color: #ff9500;
+        font-size: 14px;
+      }
+
+      .price {
+        font-size: 18px;
+        font-weight: 700;
+        color: #007aff;
+      }
+
+      .work-type {
+        color: #666;
+        font-size: 14px;
+        margin-bottom: 8px;
+      }
+
+      .date-time {
+        display: flex;
+        align-items: center;
+        margin-bottom: 8px;
+      }
+
+      .date {
+        font-weight: 500;
+        margin-right: 12px;
+      }
+
+      .time {
+        color: #666;
+      }
+
+      .address {
+        color: #666;
+        margin-bottom: 12px;
+      }
+
+      .workers {
+        display: flex;
+        align-items: center;
+      }
+
+      .workers-text {
+        font-size: 12px;
+        color: #666;
+        margin-right: 8px;
+      }
+
+      .workers-bar {
+        flex: 1;
+        height: 4px;
+        background: #e5e5e7;
+        border-radius: 2px;
+        overflow: hidden;
+      }
+
+      .workers-fill {
+        height: 100%;
+        background: #34c759;
+        border-radius: 2px;
+        width: 75%;
+      }
+
+      .loading {
+        text-align: center;
+        padding: 40px;
+        color: #666;
+      }
+
+      .error {
+        text-align: center;
+        padding: 40px;
+        color: #ff3b30;
+      }
+
+      .btn {
+        background: #007aff;
+        color: white;
+        border: none;
+        padding: 12px 24px;
+        border-radius: 8px;
+        font-size: 16px;
+        cursor: pointer;
+        margin: 20px;
+        width: calc(100% - 40px);
+      }
+
+      .btn:hover {
+        background: #0056cc;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1>📱 ShiftListApp</h1>
+        <p>Демо версия приложения</p>
+      </div>
+
+      <div id="app">
+        <div class="loading">
+          <h3>🔄 Загружаем смены...</h3>
+          <p>Получаем ваше местоположение...</p>
+        </div>
+      </div>
+
+      <button class="btn" onclick="loadShifts()">🔄 Обновить список</button>
+    </div>
+
+    <script>
+      // Mock data for demo
+      const mockShifts = [
+        {
+          logo: '🏢',
+          companyName: "ООО 'Быстрые руки'",
+          customerRating: 4.8,
+          customerFeedbacksCount: 127,
+          priceWorker: 2500,
+          workTypes: 'Упаковка товаров',
+          dateStartByCity: '2024-01-15',
+          timeStartByCity: '09:00:00',
+          timeEndByCity: '18:00:00',
+          address: 'ул. Торговая, 15, Москва',
+          currentWorkers: 3,
+          planWorkers: 4,
+        },
+        {
+          logo: '📦',
+          companyName: "Склад 'Логистик'",
+          customerRating: 4.5,
+          customerFeedbacksCount: 89,
+          priceWorker: 3000,
+          workTypes: 'Погрузка/разгрузка',
+          dateStartByCity: '2024-01-16',
+          timeStartByCity: '08:00:00',
+          timeEndByCity: '17:00:00',
+          address: 'пр. Промышленный, 42, Москва',
+          currentWorkers: 5,
+          planWorkers: 6,
+        },
+        {
+          logo: '🛒',
+          companyName: "Магазин 'МегаМаркет'",
+          customerRating: 4.2,
+          customerFeedbacksCount: 203,
+          priceWorker: 2000,
+          workTypes: 'Работа с клиентами',
+          dateStartByCity: '2024-01-17',
+          timeStartByCity: '10:00:00',
+          timeEndByCity: '19:00:00',
+          address: "ТЦ 'Мега', 2 этаж, Москва",
+          currentWorkers: 2,
+          planWorkers: 3,
+        },
+      ];
+
+      function formatPrice(price) {
+        return `${price.toLocaleString('ru-RU')} ₽`;
+      }
+
+      function formatDate(dateString) {
+        const date = new Date(dateString);
+        return date.toLocaleDateString('ru-RU', {
+          day: 'numeric',
+          month: 'long',
+          weekday: 'short',
+        });
+      }
+
+      function formatTime(timeString) {
+        return timeString.slice(0, 5);
+      }
+
+      function createShiftCard(shift) {
+        const percentage = (shift.currentWorkers / shift.planWorkers) * 100;
+
+        return `
+                <div class="shift-card">
+                    <div class="company-header">
+                        <div class="logo">${shift.logo}</div>
+                        <div class="company-info">
+                            <div class="company-name">${shift.companyName}</div>
+                            <div class="rating">★ ${shift.customerRating} (${
+          shift.customerFeedbacksCount
+        } отзывов)</div>
+                        </div>
+                        <div class="price">${formatPrice(
+                          shift.priceWorker,
+                        )}</div>
+                    </div>
+                    
+                    <div class="work-type">${shift.workTypes}</div>
+                    
+                    <div class="date-time">
+                        <div class="date">${formatDate(
+                          shift.dateStartByCity,
+                        )}</div>
+                        <div class="time">${formatTime(
+                          shift.timeStartByCity,
+                        )} - ${formatTime(shift.timeEndByCity)}</div>
+                    </div>
+                    
+                    <div class="address">📍 ${shift.address}</div>
+                    
+                    <div class="workers">
+                        <div class="workers-text">${shift.currentWorkers}/${
+          shift.planWorkers
+        } человек</div>
+                        <div class="workers-bar">
+                            <div class="workers-fill" style="width: ${percentage}%"></div>
+                        </div>
+                    </div>
+                </div>
+            `;
+      }
+
+      function loadShifts() {
+        const app = document.getElementById('app');
+
+        // Simulate loading
+        app.innerHTML = `
+                <div class="loading">
+                    <h3>🔄 Загружаем смены...</h3>
+                    <p>Получаем ваше местоположение...</p>
+                </div>
+            `;
+
+        setTimeout(() => {
+          app.innerHTML = mockShifts.map(createShiftCard).join('');
+        }, 1500);
+      }
+
+      // Load shifts on page load
+      loadShifts();
+    </script>
+  </body>
+</html>
