@@ -1,79 +1,105 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# ShiftListApp - React Native приложение для поиска смен
 
-# Getting Started
+## Описание
 
->**Note**: Make sure you have completed the [React Native - Environment Setup](https://reactnative.dev/docs/environment-setup) instructions till "Creating a new application" step, before proceeding.
+React Native приложение (CLI) для отображения списка доступных смен для подработки, полученных по геолокации пользователя.
 
-## Step 1: Start the Metro Server
+## Функциональные требования
 
-First, you will need to start **Metro**, the JavaScript _bundler_ that ships _with_ React Native.
+- ✅ При первом запуске запрашивает точную геолокацию пользователя
+- ✅ Получает список смен в городе, передавая координаты пользователя в запрос
+- ✅ Отображает список смен с краткой информацией
+- ✅ По нажатию на элемент списка открывает экран с подробными данными выбранной смены
+- ✅ Данные для экрана деталей берутся из ранее полученного списка (без повторного запроса)
 
-To start Metro, run the following command from the _root_ of your React Native project:
+## Технологический стек
 
-```bash
-# using npm
-npm start
+- **React Native 0.73.0** (CLI)
+- **TypeScript** для типизации
+- **MobX** для управления состоянием
+- **React Native Geolocation** для получения координат
+- **React Native Vector Icons** для иконок
 
-# OR using Yarn
-yarn start
+## Структура проекта
+
+```
+src/
+├── components/          # Переиспользуемые компоненты
+│   ├── ShiftCard.tsx   # Карточка смены
+│   └── LoadingSpinner.tsx
+├── screens/            # Экраны приложения
+│   ├── ShiftListScreen.tsx    # Список смен
+│   └── ShiftDetailsScreen.tsx # Детали смены
+├── stores/             # MobX stores
+│   └── ShiftStore.ts   # Основной store
+├── services/           # API сервисы
+│   └── ApiService.ts   # HTTP запросы
+├── types/              # TypeScript типы
+│   └── index.ts        # Интерфейсы данных
+└── utils/              # Утилиты
+    └── location.ts     # Работа с геолокацией
 ```
 
-## Step 2: Start your Application
+## Установка и запуск
 
-Let Metro Bundler run in its _own_ terminal. Open a _new_ terminal from the _root_ of your React Native project. Run the following command to start your _Android_ or _iOS_ app:
+### Предварительные требования
 
-### For Android
+- Node.js (версия 16 или выше)
+- React Native CLI
+- Android Studio (для Android)
+- Xcode (для iOS)
 
-```bash
-# using npm
-npm run android
-
-# OR using Yarn
-yarn android
-```
-
-### For iOS
+### Установка зависимостей
 
 ```bash
-# using npm
-npm run ios
-
-# OR using Yarn
-yarn ios
+npm install
 ```
 
-If everything is set up _correctly_, you should see your new app running in your _Android Emulator_ or _iOS Simulator_ shortly provided you have set up your emulator/simulator correctly.
+### Запуск на Android
 
-This is one way to run your app — you can also run it directly from within Android Studio and Xcode respectively.
+```bash
+npx react-native run-android
+```
 
-## Step 3: Modifying your App
+### Запуск на iOS
 
-Now that you have successfully run the app, let's modify it.
+```bash
+cd ios && pod install && cd ..
+npx react-native run-ios
+```
 
-1. Open `App.tsx` in your text editor of choice and edit some lines.
-2. For **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Developer Menu** (<kbd>Ctrl</kbd> + <kbd>M</kbd> (on Window and Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (on macOS)) to see your changes!
+## API
 
-   For **iOS**: Hit <kbd>Cmd ⌘</kbd> + <kbd>R</kbd> in your iOS Simulator to reload the app and see your changes!
+Приложение использует API эндпоинт:
+```
+GET https://mobile.handswork.pro/api/shift?lat={latitude}&lng={longitude}
+```
 
-## Congratulations! :tada:
+## Разрешения
 
-You've successfully run and modified your React Native App. :partying_face:
+### Android
+- `ACCESS_FINE_LOCATION` - для точной геолокации
+- `ACCESS_COARSE_LOCATION` - для приблизительной геолокации
 
-### Now what?
+### iOS
+- `NSLocationWhenInUseUsageDescription` - описание использования геолокации
 
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [Introduction to React Native](https://reactnative.dev/docs/getting-started).
+## Особенности реализации
 
-# Troubleshooting
+- **Оптимизированная верстка** с использованием FlatList для списка смен
+- **Кэширование данных** - смены загружаются один раз и сохраняются в MobX store
+- **Обработка состояний** - загрузка, ошибки, пустой список
+- **Адаптивный дизайн** - карточки смен адаптируются под содержимое
+- **Pull-to-refresh** - возможность обновить список смен
+- **Типизация** - полная типизация с TypeScript
 
-If you can't get this to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
+## Коммиты
 
-# Learn More
-
-To learn more about React Native, take a look at the following resources:
-
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+История коммитов отражает поэтапную реализацию:
+1. Настройка проекта и зависимостей
+2. Создание базовой структуры и типов
+3. Реализация геолокации и API
+4. Настройка MobX store
+5. Создание UI компонентов
+6. Настройка навигации
+7. Финальная стилизация и тестирование
