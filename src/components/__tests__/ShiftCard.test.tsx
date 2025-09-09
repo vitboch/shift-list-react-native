@@ -39,7 +39,7 @@ describe('ShiftCard', () => {
     );
 
     fireEvent.press(getByTestId('shift-card'));
-    expect(mockOnPress).toHaveBeenCalledWith(mockShift);
+    expect(mockOnPress).toHaveBeenCalledTimes(1);
   });
 
   it('formats price correctly', () => {

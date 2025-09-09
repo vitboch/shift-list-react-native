@@ -5,9 +5,6 @@ import {
   getLocationWithPermission,
 } from '../location';
 
-// Mock Geolocation
-jest.mock('@react-native-community/geolocation');
-
 const mockGeolocation = Geolocation as jest.Mocked<typeof Geolocation>;
 
 describe('Location Utils', () => {
@@ -17,19 +14,30 @@ describe('Location Utils', () => {
 
   describe('requestLocationPermission', () => {
     it('should resolve with true when permission is granted', async () => {
-      mockGeolocation.requestAuthorization.mockImplementation(success => {
-        success();
-        return undefined;
-      });
+      mockGeolocation.requestAuthorization.mockImplementation(
+        (success, _error) => {
+          if (success) {
+            success();
+          }
+          return undefined;
+        }
+      );
 
       const result = await requestLocationPermission();
       expect(result).toBe(true);
     });
 
     it('should resolve with false when permission is denied', async () => {
+      const mockError = {
+        code: 1,
+        message: 'Permission denied',
+      };
+
       mockGeolocation.requestAuthorization.mockImplementation(
-        (success, error) => {
-          error({ code: 1, message: 'Permission denied' });
+        (_success, error) => {
+          if (error) {
+            error(mockError as any);
+          }
           return undefined;
         }
       );
@@ -48,10 +56,14 @@ describe('Location Utils', () => {
         },
       };
 
-      mockGeolocation.getCurrentPosition.mockImplementation(success => {
-        success(mockPosition as any);
-        return undefined;
-      });
+      mockGeolocation.getCurrentPosition.mockImplementation(
+        (success, _error) => {
+          if (success) {
+            success(mockPosition as any);
+          }
+          return undefined;
+        }
+      );
 
       const result = await getCurrentLocation();
       expect(result).toEqual({
@@ -61,11 +73,16 @@ describe('Location Utils', () => {
     });
 
     it('should reject with error when location fails', async () => {
-      const mockError = { code: 1, message: 'Location error' };
+      const mockError = {
+        code: 1,
+        message: 'Location error',
+      };
 
       mockGeolocation.getCurrentPosition.mockImplementation(
-        (success, error) => {
-          error(mockError as any);
+        (_success, error) => {
+          if (error) {
+            error(mockError as any);
+          }
           return undefined;
         }
       );
@@ -83,15 +100,23 @@ describe('Location Utils', () => {
         },
       };
 
-      mockGeolocation.requestAuthorization.mockImplementation(success => {
-        success();
-        return undefined;
-      });
+      mockGeolocation.requestAuthorization.mockImplementation(
+        (success, _error) => {
+          if (success) {
+            success();
+          }
+          return undefined;
+        }
+      );
 
-      mockGeolocation.getCurrentPosition.mockImplementation(success => {
-        success(mockPosition as any);
-        return undefined;
-      });
+      mockGeolocation.getCurrentPosition.mockImplementation(
+        (success, _error) => {
+          if (success) {
+            success(mockPosition as any);
+          }
+          return undefined;
+        }
+      );
 
       const result = await getLocationWithPermission();
       expect(result).toEqual({
@@ -101,9 +126,16 @@ describe('Location Utils', () => {
     });
 
     it('should throw error when permission is denied', async () => {
+      const mockError = {
+        code: 1,
+        message: 'Permission denied',
+      };
+
       mockGeolocation.requestAuthorization.mockImplementation(
-        (success, error) => {
-          error({ code: 1, message: 'Permission denied' });
+        (_success, error) => {
+          if (error) {
+            error(mockError as any);
+          }
           return undefined;
         }
       );

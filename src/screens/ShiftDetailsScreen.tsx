@@ -57,7 +57,11 @@ export const ShiftDetailsScreen: React.FC<ShiftDetailsScreenProps> = ({
       >
         {/* Header */}
         <View style={styles.header}>
-          <TouchableOpacity style={styles.backButton} onPress={onBack}>
+          <TouchableOpacity
+            style={styles.backButton}
+            onPress={onBack}
+            testID="back-button"
+          >
             <Text style={styles.backButtonText}>← Назад</Text>
           </TouchableOpacity>
           <Text style={styles.headerTitle}>Детали смены</Text>
