@@ -1,5 +1,5 @@
 // Alternative way to run the app using Expo Go
-const {execSync} = require('child_process');
+const { execSync } = require('child_process');
 const fs = require('fs');
 
 console.log('🚀 Starting React Native app with Expo Go...\n');
