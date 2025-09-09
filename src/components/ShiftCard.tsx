@@ -1,11 +1,5 @@
-import React from 'react';
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  Image,
-  StyleSheet,
-} from 'react-native';
+import React, { memo, useMemo } from 'react';
+import { View, Text, TouchableOpacity, Image, StyleSheet } from 'react-native';
 import { Shift } from '../types';
 
 interface ShiftCardProps {
@@ -13,71 +7,95 @@ interface ShiftCardProps {
   onPress: () => void;
 }
 
-export const ShiftCard: React.FC<ShiftCardProps> = ({ shift, onPress }) => {
-  const formatPrice = (price: number) => {
-    return `${price.toLocaleString('ru-RU')} ₽`;
-  };
+export const ShiftCard: React.FC<ShiftCardProps> = memo(
+  ({ shift, onPress }) => {
+    const formatPrice = useMemo(
+      () => (price: number) => {
+        return `${price.toLocaleString('ru-RU')} ₽`;
+      },
+      []
+    );
 
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('ru-RU', {
-      day: 'numeric',
-      month: 'long',
-      weekday: 'short',
-    });
-  };
+    const formatDate = useMemo(
+      () => (dateString: string) => {
+        const date = new Date(dateString);
+        return date.toLocaleDateString('ru-RU', {
+          day: 'numeric',
+          month: 'long',
+          weekday: 'short',
+        });
+      },
+      []
+    );
 
-  const formatTime = (timeString: string) => {
-    return timeString.slice(0, 5); // Remove seconds
-  };
+    const formatTime = useMemo(
+      () => (timeString: string) => {
+        return timeString.slice(0, 5); // Remove seconds
+      },
+      []
+    );
 
-  return (
-    <TouchableOpacity style={styles.container} onPress={onPress}>
-      <View style={styles.header}>
-        <Image source={{ uri: shift.logo }} style={styles.logo} />
-        <View style={styles.headerInfo}>
-          <Text style={styles.companyName}>{shift.companyName}</Text>
-          <View style={styles.ratingContainer}>
-            <Text style={styles.rating}>★ {shift.customerRating}</Text>
-            <Text style={styles.feedbacks}>
-              ({shift.customerFeedbacksCount} отзывов)
-            </Text>
+    const workersPercentage = useMemo(() => {
+      return (shift.currentWorkers / shift.planWorkers) * 100;
+    }, [shift.currentWorkers, shift.planWorkers]);
+
+    return (
+      <TouchableOpacity
+        style={styles.container}
+        onPress={onPress}
+        testID="shift-card"
+        accessible={true}
+        accessibilityLabel={`Смена в компании ${shift.companyName}, ${shift.workTypes}`}
+        accessibilityHint="Нажмите для просмотра деталей смены"
+        accessibilityRole="button"
+      >
+        <View style={styles.header}>
+          <Image source={{ uri: shift.logo }} style={styles.logo} />
+          <View style={styles.headerInfo}>
+            <Text style={styles.companyName}>{shift.companyName}</Text>
+            <View style={styles.ratingContainer}>
+              <Text style={styles.rating}>★ {shift.customerRating}</Text>
+              <Text style={styles.feedbacks}>
+                ({shift.customerFeedbacksCount} отзывов)
+              </Text>
+            </View>
+          </View>
+          <Text style={styles.price}>{formatPrice(shift.priceWorker)}</Text>
+        </View>
+
+        <Text style={styles.workType}>{shift.workTypes}</Text>
+
+        <View style={styles.dateTimeContainer}>
+          <Text style={styles.date}>{formatDate(shift.dateStartByCity)}</Text>
+          <Text style={styles.time}>
+            {formatTime(shift.timeStartByCity)} -{' '}
+            {formatTime(shift.timeEndByCity)}
+          </Text>
+        </View>
+
+        <Text style={styles.address} numberOfLines={2}>
+          📍 {shift.address}
+        </Text>
+
+        <View style={styles.workersContainer}>
+          <Text style={styles.workersText}>
+            {shift.currentWorkers}/{shift.planWorkers} человек
+          </Text>
+          <View style={styles.workersBar} testID="workers-bar">
+            <View
+              style={[
+                styles.workersFill,
+                {
+                  width: `${workersPercentage}%`,
+                },
+              ]}
+            />
           </View>
         </View>
-        <Text style={styles.price}>{formatPrice(shift.priceWorker)}</Text>
-      </View>
-
-      <Text style={styles.workType}>{shift.workTypes}</Text>
-      
-      <View style={styles.dateTimeContainer}>
-        <Text style={styles.date}>{formatDate(shift.dateStartByCity)}</Text>
-        <Text style={styles.time}>
-          {formatTime(shift.timeStartByCity)} - {formatTime(shift.timeEndByCity)}
-        </Text>
-      </View>
-
-      <Text style={styles.address} numberOfLines={2}>
-        📍 {shift.address}
-      </Text>
-
-      <View style={styles.workersContainer}>
-        <Text style={styles.workersText}>
-          {shift.currentWorkers}/{shift.planWorkers} человек
-        </Text>
-        <View style={styles.workersBar}>
-          <View
-            style={[
-              styles.workersFill,
-              {
-                width: `${(shift.currentWorkers / shift.planWorkers) * 100}%`,
-              },
-            ]}
-          />
-        </View>
-      </View>
-    </TouchableOpacity>
-  );
-};
+      </TouchableOpacity>
+    );
+  }
+);
 
 const styles = StyleSheet.create({
   container: {

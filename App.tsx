@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { StatusBar } from 'react-native';
+import { ErrorBoundary } from './src/components/ErrorBoundary';
 import { ShiftStore } from './src/stores/ShiftStore';
 import { ShiftListScreen } from './src/screens/ShiftListScreen';
 import { ShiftDetailsScreen } from './src/screens/ShiftDetailsScreen';
@@ -18,20 +19,17 @@ const App: React.FC = () => {
   };
 
   return (
-    <>
+    <ErrorBoundary>
       <StatusBar barStyle="dark-content" backgroundColor="#F2F2F7" />
       {selectedShift ? (
-        <ShiftDetailsScreen
-          shift={selectedShift}
-          onBack={handleBackToList}
-        />
+        <ShiftDetailsScreen shift={selectedShift} onBack={handleBackToList} />
       ) : (
         <ShiftListScreen
           shiftStore={shiftStore}
           onShiftPress={handleShiftPress}
         />
       )}
-    </>
+    </ErrorBoundary>
   );
 };
 
