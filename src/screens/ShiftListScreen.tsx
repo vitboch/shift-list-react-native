@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import {
   View,
   FlatList,
@@ -20,11 +20,7 @@ interface ShiftListScreenProps {
 
 export const ShiftListScreen: React.FC<ShiftListScreenProps> = observer(
   ({ shiftStore, onShiftPress }) => {
-    useEffect(() => {
-      loadShifts();
-    }, []);
-
-    const loadShifts = async () => {
+    const loadShifts = useCallback(async () => {
       try {
         await shiftStore.loadShifts();
       } catch (error) {
@@ -34,17 +30,18 @@ export const ShiftListScreen: React.FC<ShiftListScreenProps> = observer(
           [{ text: 'Повторить', onPress: loadShifts }]
         );
       }
-    };
+    }, [shiftStore]);
+
+    useEffect(() => {
+      loadShifts();
+    }, [loadShifts]);
 
     const handleRefresh = () => {
       loadShifts();
     };
 
-    const renderShift = ({ item, index }: { item: Shift; index: number }) => (
-      <ShiftCard
-        shift={item}
-        onPress={() => onShiftPress(item)}
-      />
+    const renderShift = ({ item }: { item: Shift }) => (
+      <ShiftCard shift={item} onPress={() => onShiftPress(item)} />
     );
 
     if (shiftStore.isLoading && shiftStore.shifts.length === 0) {

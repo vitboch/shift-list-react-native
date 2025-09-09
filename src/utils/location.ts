@@ -2,10 +2,10 @@ import Geolocation from '@react-native-community/geolocation';
 import { Location, LocationError } from '../types';
 
 export const requestLocationPermission = (): Promise<boolean> => {
-  return new Promise((resolve) => {
+  return new Promise(resolve => {
     Geolocation.requestAuthorization(
       () => resolve(true),
-      (error) => {
+      error => {
         console.warn('Location permission denied:', error);
         resolve(false);
       }
@@ -16,7 +16,7 @@ export const requestLocationPermission = (): Promise<boolean> => {
 export const getCurrentLocation = (): Promise<Location> => {
   return new Promise((resolve, reject) => {
     Geolocation.getCurrentPosition(
-      (position) => {
+      position => {
         resolve({
           latitude: position.coords.latitude,
           longitude: position.coords.longitude,
@@ -37,10 +37,10 @@ export const getCurrentLocation = (): Promise<Location> => {
 
 export const getLocationWithPermission = async (): Promise<Location> => {
   const hasPermission = await requestLocationPermission();
-  
+
   if (!hasPermission) {
     throw new Error('Location permission denied');
   }
-  
+
   return getCurrentLocation();
 };

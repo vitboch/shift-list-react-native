@@ -6,11 +6,11 @@ console.log('🚀 Starting React Native app with Expo Go...\n');
 
 // Check if Expo CLI is installed
 try {
-  execSync('npx expo --version', {stdio: 'ignore'});
+  execSync('npx expo --version', { stdio: 'ignore' });
   console.log('✅ Expo CLI found');
 } catch (error) {
   console.log('📦 Installing Expo CLI...');
-  execSync('npm install -g @expo/cli', {stdio: 'inherit'});
+  execSync('npm install -g @expo/cli', { stdio: 'inherit' });
 }
 
 // Create app.json for Expo
@@ -61,7 +61,7 @@ console.log('✅ Created app.json for Expo');
 
 // Install expo-location
 console.log('📦 Installing expo-location...');
-execSync('npm install expo-location', {stdio: 'inherit'});
+execSync('npm install expo-location', { stdio: 'inherit' });
 
 console.log('\n🎯 To run the app:');
 console.log('1. Install Expo Go app on your phone');

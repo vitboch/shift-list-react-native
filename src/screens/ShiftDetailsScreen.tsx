@@ -51,7 +51,10 @@ export const ShiftDetailsScreen: React.FC<ShiftDetailsScreenProps> = ({
 
   return (
     <View style={styles.container}>
-      <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
+      <ScrollView
+        style={styles.scrollView}
+        showsVerticalScrollIndicator={false}
+      >
         {/* Header */}
         <View style={styles.header}>
           <TouchableOpacity style={styles.backButton} onPress={onBack}>
@@ -91,7 +94,8 @@ export const ShiftDetailsScreen: React.FC<ShiftDetailsScreenProps> = ({
           <Text style={styles.sectionTitle}>Дата и время</Text>
           <Text style={styles.date}>{formatDate(shift.dateStartByCity)}</Text>
           <Text style={styles.time}>
-            {formatTime(shift.timeStartByCity)} - {formatTime(shift.timeEndByCity)}
+            {formatTime(shift.timeStartByCity)} -{' '}
+            {formatTime(shift.timeEndByCity)}
           </Text>
         </View>
 
@@ -109,7 +113,9 @@ export const ShiftDetailsScreen: React.FC<ShiftDetailsScreenProps> = ({
               <Text style={styles.workersText}>
                 {shift.currentWorkers} из {shift.planWorkers} человек
               </Text>
-              <Text style={[styles.workersStatus, { color: workersStatus.color }]}>
+              <Text
+                style={[styles.workersStatus, { color: workersStatus.color }]}
+              >
                 {workersStatus.text}
               </Text>
             </View>
@@ -118,7 +124,9 @@ export const ShiftDetailsScreen: React.FC<ShiftDetailsScreenProps> = ({
                 style={[
                   styles.workersFill,
                   {
-                    width: `${(shift.currentWorkers / shift.planWorkers) * 100}%`,
+                    width: `${
+                      (shift.currentWorkers / shift.planWorkers) * 100
+                    }%`,
                     backgroundColor: workersStatus.color,
                   },
                 ]}

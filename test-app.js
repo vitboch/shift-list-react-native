@@ -17,7 +17,7 @@ const requiredFiles = [
   'src/screens/ShiftDetailsScreen.tsx',
   'package.json',
   'android/app/src/main/AndroidManifest.xml',
-  'ios/ShiftListApp/Info.plist'
+  'ios/ShiftListApp/Info.plist',
 ];
 
 let allFilesExist = true;
@@ -40,7 +40,7 @@ const requiredDeps = [
   'mobx',
   'mobx-react-lite',
   '@react-native-community/geolocation',
-  'react-native-vector-icons'
+  'react-native-vector-icons',
 ];
 
 requiredDeps.forEach(dep => {
@@ -53,7 +53,10 @@ requiredDeps.forEach(dep => {
 });
 
 console.log('\n🔧 Checking Android permissions...');
-const androidManifest = fs.readFileSync('android/app/src/main/AndroidManifest.xml', 'utf8');
+const androidManifest = fs.readFileSync(
+  'android/app/src/main/AndroidManifest.xml',
+  'utf8'
+);
 if (androidManifest.includes('ACCESS_FINE_LOCATION')) {
   console.log('✅ Android location permissions configured');
 } else {

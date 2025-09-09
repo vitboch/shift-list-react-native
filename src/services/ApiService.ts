@@ -8,11 +8,11 @@ export class ApiService {
       const response = await fetch(
         `${API_BASE_URL}/shift?lat=${location.latitude}&lng=${location.longitude}`
       );
-      
+
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-      
+
       const data: ApiResponse = await response.json();
       return data.shifts || [];
     } catch (error) {
