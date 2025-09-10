@@ -1,67 +1,69 @@
-# ShiftListApp - React Native приложение для поиска смен
+# ShiftListApp - React Native Shift Search Application
 
-## Описание
+## Description
 
-React Native приложение (CLI) для отображения списка доступных смен для подработки, полученных по геолокации пользователя.
+React Native application (CLI) for displaying a list of available work shifts based on user's geolocation.
 
-## Функциональные требования
+## Functional Requirements
 
-- ✅ При первом запуске запрашивает точную геолокацию пользователя
-- ✅ Получает список смен в городе, передавая координаты пользователя в запрос
-- ✅ Отображает список смен с краткой информацией
-- ✅ По нажатию на элемент списка открывает экран с подробными данными выбранной смены
-- ✅ Данные для экрана деталей берутся из ранее полученного списка (без повторного запроса)
+- ✅ Requests precise user geolocation on first launch
+- ✅ Fetches shift list in the city by passing user coordinates in the request
+- ✅ Displays shift list with brief information
+- ✅ Opens detailed shift screen when tapping on a list item
+- ✅ Detailed screen data is taken from previously fetched list (no additional requests)
 
-## Технологический стек
+## Tech Stack
 
-- **React Native 0.73.0** (CLI)
-- **TypeScript** для типизации
-- **MobX** для управления состоянием
-- **React Native Geolocation** для получения координат
-- **React Native Vector Icons** для иконок
+- **React Native 0.73.11** (CLI)
+- **TypeScript** for type safety
+- **MobX** for state management
+- **React Native Geolocation** for getting coordinates
+- **React Native Vector Icons** for icons
+- **React Navigation** for navigation
 
-## Структура проекта
+## Project Structure
 
 ```
 src/
-├── components/          # Переиспользуемые компоненты
-│   ├── ShiftCard.tsx   # Карточка смены
-│   └── LoadingSpinner.tsx
-├── screens/            # Экраны приложения
-│   ├── ShiftListScreen.tsx    # Список смен
-│   └── ShiftDetailsScreen.tsx # Детали смены
+├── components/          # Reusable components
+│   ├── ShiftCard.tsx   # Shift card component
+│   ├── LoadingSpinner.tsx
+│   └── ErrorBoundary.tsx
+├── screens/            # Application screens
+│   ├── ShiftListScreen.tsx    # Shift list screen
+│   └── ShiftDetailsScreen.tsx # Shift details screen
 ├── stores/             # MobX stores
-│   └── ShiftStore.ts   # Основной store
-├── services/           # API сервисы
-│   └── ApiService.ts   # HTTP запросы
-├── types/              # TypeScript типы
-│   └── index.ts        # Интерфейсы данных
-└── utils/              # Утилиты
-    └── location.ts     # Работа с геолокацией
+│   └── ShiftStore.ts   # Main store
+├── services/           # API services
+│   └── ApiService.ts   # HTTP requests
+├── types/              # TypeScript types
+│   └── index.ts        # Data interfaces
+└── utils/              # Utilities
+    └── location.ts     # Geolocation handling
 ```
 
-## Установка и запуск
+## Installation and Setup
 
-### Предварительные требования
+### Prerequisites
 
-- Node.js (версия 16 или выше)
+- Node.js (version 18 or higher)
 - React Native CLI
-- Android Studio (для Android)
-- Xcode (для iOS)
+- Android Studio (for Android)
+- Xcode (for iOS)
 
-### Установка зависимостей
+### Install Dependencies
 
 ```bash
 npm install
 ```
 
-### Запуск на Android
+### Run on Android
 
 ```bash
 npx react-native run-android
 ```
 
-### Запуск на iOS
+### Run on iOS
 
 ```bash
 cd ios && pod install && cd ..
@@ -70,36 +72,60 @@ npx react-native run-ios
 
 ## API
 
-Приложение использует API эндпоинт:
+The application uses the following API endpoint:
 ```
 GET https://mobile.handswork.pro/api/shift?lat={latitude}&lng={longitude}
 ```
 
-## Разрешения
+## Permissions
 
 ### Android
-- `ACCESS_FINE_LOCATION` - для точной геолокации
-- `ACCESS_COARSE_LOCATION` - для приблизительной геолокации
+- `ACCESS_FINE_LOCATION` - for precise geolocation
+- `ACCESS_COARSE_LOCATION` - for approximate geolocation
 
 ### iOS
-- `NSLocationWhenInUseUsageDescription` - описание использования геолокации
+- `NSLocationWhenInUseUsageDescription` - geolocation usage description
 
-## Особенности реализации
+## Implementation Features
 
-- **Оптимизированная верстка** с использованием FlatList для списка смен
-- **Кэширование данных** - смены загружаются один раз и сохраняются в MobX store
-- **Обработка состояний** - загрузка, ошибки, пустой список
-- **Адаптивный дизайн** - карточки смен адаптируются под содержимое
-- **Pull-to-refresh** - возможность обновить список смен
-- **Типизация** - полная типизация с TypeScript
+- **Optimized rendering** using FlatList for shift list
+- **Data caching** - shifts are loaded once and stored in MobX store
+- **State handling** - loading, errors, empty list states
+- **Responsive design** - shift cards adapt to content
+- **Pull-to-refresh** - ability to refresh shift list
+- **Type safety** - full TypeScript typing
+- **Error boundaries** - graceful error handling
+- **Testing** - comprehensive test coverage (91.07%)
 
-## Коммиты
+## Development
 
-История коммитов отражает поэтапную реализацию:
-1. Настройка проекта и зависимостей
-2. Создание базовой структуры и типов
-3. Реализация геолокации и API
-4. Настройка MobX store
-5. Создание UI компонентов
-6. Настройка навигации
-7. Финальная стилизация и тестирование
+### Available Scripts
+
+```bash
+npm run lint          # Run ESLint
+npm run lint:fix      # Fix ESLint issues
+npm run type-check    # Run TypeScript check
+npm run format        # Format code with Prettier
+npm run format:check  # Check code formatting
+npm test              # Run tests
+npm run test:coverage # Run tests with coverage
+npm run test:watch    # Run tests in watch mode
+```
+
+### CI/CD
+
+The project includes GitHub Actions workflow for:
+- Code quality checks (ESLint, Prettier, TypeScript)
+- Test execution with coverage reporting
+- Security audit of dependencies
+
+## Commit History
+
+The commit history reflects the step-by-step implementation:
+1. Project setup and dependencies
+2. Basic structure and types creation
+3. Geolocation and API implementation
+4. MobX store setup
+5. UI components creation
+6. Navigation setup
+7. Final styling and testing
