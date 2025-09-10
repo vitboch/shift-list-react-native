@@ -178,7 +178,7 @@ jobs:
         run: |
           npx react-native run-ios --configuration Release --simulator "iPhone 15" --no-packager
         env:
-          IOS_DEPLOYMENT_TARGET: 14.0
+          IOS_DEPLOYMENT_TARGET: 15.0
 
       - name: Check iOS build exists
         run: |
